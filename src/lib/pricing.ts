@@ -1,0 +1,63 @@
+export type Modality = "individual" | "compartida" | "perfil";
+
+export interface PricingSettings {
+  exchange_rate: number;
+  multiplier_individual: number;
+  multiplier_compartida: number;
+  multiplier_perfil: number;
+}
+
+export const DEFAULT_SETTINGS: PricingSettings = {
+  exchange_rate: 20,
+  multiplier_individual: 4,
+  multiplier_compartida: 2,
+  multiplier_perfil: 1,
+};
+
+export function getMultiplier(settings: PricingSettings, modality: Modality): number {
+  switch (modality) {
+    case "individual":
+      return settings.multiplier_individual;
+    case "compartida":
+      return settings.multiplier_compartida;
+    case "perfil":
+      return settings.multiplier_perfil;
+  }
+}
+
+export function modalityLabel(modality: Modality): string {
+  switch (modality) {
+    case "individual":
+      return "Pantalla individual";
+    case "compartida":
+      return "Cuenta compartida";
+    case "perfil":
+      return "Perfil básico";
+  }
+}
+
+export function calculatePriceMXN(
+  basePriceUsd: number,
+  modality: Modality,
+  durationMonths: number,
+  settings: PricingSettings = DEFAULT_SETTINGS
+): number {
+  const multiplier = getMultiplier(settings, modality);
+  const monthly = basePriceUsd * multiplier * settings.exchange_rate;
+  return Math.round(monthly * durationMonths);
+}
+
+export function formatMXN(amount: number): string {
+  return new Intl.NumberFormat("es-MX", {
+    style: "currency",
+    currency: "MXN",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(amount);
+}
+
+export function durationLabel(months: number): string {
+  if (months === 1) return "1 mes";
+  if (months === 12) return "1 año";
+  return `${months} meses`;
+}
