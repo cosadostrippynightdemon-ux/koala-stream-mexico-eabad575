@@ -53,7 +53,6 @@ export function Footer() {
             <li><a href="#como-funciona" className="transition-smooth hover:text-primary">Cómo funciona</a></li>
             <li><a href="#deportes" className="transition-smooth hover:text-primary">Deportes</a></li>
             <li><a href="#faq" className="transition-smooth hover:text-primary">Preguntas frecuentes</a></li>
-            <li><Link to="/admin" className="transition-smooth hover:text-primary">Acceso administrador</Link></li>
           </ul>
         </div>
 
