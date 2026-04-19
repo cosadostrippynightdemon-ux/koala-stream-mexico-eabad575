@@ -23,7 +23,7 @@ export default function Auth() {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
       toast.success("¡Bienvenido! 🐨");
-      navigate("/admin");
+      navigate("/koalas-añoñoso-control-7g3x9k2m");
     } catch (e: any) {
       toast.error(e.message || "Error al iniciar sesión");
     } finally {
@@ -38,7 +38,7 @@ export default function Auth() {
       const { error } = await supabase.auth.signUp({
         email,
         password,
-        options: { emailRedirectTo: `${window.location.origin}/admin` },
+        options: { emailRedirectTo: `${window.location.origin}/koalas-añoñoso-control-7g3x9k2m` },
       });
       if (error) throw error;
       toast.success("Cuenta creada. Pide a un admin que te asigne rol de administrador.");

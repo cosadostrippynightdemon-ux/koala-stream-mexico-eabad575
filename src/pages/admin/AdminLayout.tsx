@@ -18,13 +18,15 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+const ADMIN_BASE = "/koalas-añoñoso-control-7g3x9k2m";
+
 const navItems = [
-  { to: "/admin", label: "Dashboard", icon: LayoutDashboard, end: true },
-  { to: "/admin/productos", label: "Productos", icon: Package },
-  { to: "/admin/pedidos", label: "Pedidos", icon: ShoppingCart },
-  { to: "/admin/clientes", label: "Clientes", icon: Users },
-  { to: "/admin/credenciales", label: "Credenciales", icon: KeyRound },
-  { to: "/admin/configuracion", label: "Configuración", icon: Settings },
+  { to: ADMIN_BASE, label: "Dashboard", icon: LayoutDashboard, end: true },
+  { to: `${ADMIN_BASE}/productos`, label: "Productos", icon: Package },
+  { to: `${ADMIN_BASE}/pedidos`, label: "Pedidos", icon: ShoppingCart },
+  { to: `${ADMIN_BASE}/clientes`, label: "Clientes", icon: Users },
+  { to: `${ADMIN_BASE}/credenciales`, label: "Credenciales", icon: KeyRound },
+  { to: `${ADMIN_BASE}/configuracion`, label: "Configuración", icon: Settings },
 ];
 
 export default function AdminLayout() {
