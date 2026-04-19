@@ -1,7 +1,7 @@
 import { Logo } from "@/components/brand/Logo";
 import { Watermark } from "@/components/brand/Watermark";
 import { MessageCircle, Heart } from "lucide-react";
-import { Link } from "react-router-dom";
+
 import { whatsappLink, WHATSAPP_DISPLAY } from "@/lib/whatsapp";
 
 const sponsors = [
