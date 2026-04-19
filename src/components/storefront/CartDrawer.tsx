@@ -12,6 +12,7 @@ import { Trash2, Plus, Minus, MessageCircle, ShoppingBag } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { z } from "zod";
+import { sfx } from "@/lib/sounds";
 
 const formSchema = z.object({
   name: z.string().trim().min(2, "Mínimo 2 caracteres").max(100),
@@ -32,10 +33,12 @@ export function CartDrawer() {
   async function handleCheckout() {
     const parsed = formSchema.safeParse({ name, whatsapp, email, notes });
     if (!parsed.success) {
+      sfx.error();
       toast.error(parsed.error.issues[0].message);
       return;
     }
     if (items.length === 0) {
+      sfx.error();
       toast.error("Tu carrito está vacío");
       return;
     }
@@ -67,6 +70,7 @@ export function CartDrawer() {
       const url = whatsappLink(message, settings.whatsapp_number);
       window.open(url, "_blank");
 
+      sfx.success();
       toast.success("¡Pedido registrado! Te redirigimos a WhatsApp 🐨");
       clear();
       setName("");

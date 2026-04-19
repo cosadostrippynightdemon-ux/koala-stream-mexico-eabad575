@@ -8,11 +8,14 @@ export interface PricingSettings {
 }
 
 export const DEFAULT_SETTINGS: PricingSettings = {
-  exchange_rate: 20,
-  multiplier_individual: 4,
-  multiplier_compartida: 2,
-  multiplier_perfil: 1,
+  exchange_rate: 1,
+  multiplier_individual: 1,
+  multiplier_compartida: 1,
+  multiplier_perfil: 0.6,
 };
+
+/** Precio fijo MXN por mes para modalidad "Pantalla individual" en TODOS los productos. */
+export const INDIVIDUAL_FIXED_MXN = 80;
 
 export function getMultiplier(settings: PricingSettings, modality: Modality): number {
   switch (modality) {
@@ -36,14 +39,25 @@ export function modalityLabel(modality: Modality): string {
   }
 }
 
+/**
+ * Cálculo de precio MXN.
+ * - "individual": precio fijo $80 MXN/mes (igual para todos los productos).
+ * - "compartida": precio MXN mensual del producto (ya está a mitad de precio en BD).
+ * - "perfil": 60% del precio mensual.
+ */
 export function calculatePriceMXN(
-  basePriceUsd: number,
+  basePriceMxnMonthly: number,
   modality: Modality,
   durationMonths: number,
   settings: PricingSettings = DEFAULT_SETTINGS
 ): number {
-  const multiplier = getMultiplier(settings, modality);
-  const monthly = basePriceUsd * multiplier * settings.exchange_rate;
+  let monthly: number;
+  if (modality === "individual") {
+    monthly = INDIVIDUAL_FIXED_MXN;
+  } else {
+    const multiplier = getMultiplier(settings, modality);
+    monthly = basePriceMxnMonthly * multiplier * settings.exchange_rate;
+  }
   return Math.round(monthly * durationMonths);
 }
 
