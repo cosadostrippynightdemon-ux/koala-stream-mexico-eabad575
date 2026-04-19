@@ -1,7 +1,7 @@
 import { Logo } from "@/components/brand/Logo";
 import { Watermark } from "@/components/brand/Watermark";
 import { MessageCircle, Heart } from "lucide-react";
-import { Link } from "react-router-dom";
+
 import { whatsappLink, WHATSAPP_DISPLAY } from "@/lib/whatsapp";
 
 const sponsors = [
@@ -53,7 +53,6 @@ export function Footer() {
             <li><a href="#como-funciona" className="transition-smooth hover:text-primary">Cómo funciona</a></li>
             <li><a href="#deportes" className="transition-smooth hover:text-primary">Deportes</a></li>
             <li><a href="#faq" className="transition-smooth hover:text-primary">Preguntas frecuentes</a></li>
-            <li><Link to="/admin" className="transition-smooth hover:text-primary">Acceso administrador</Link></li>
           </ul>
         </div>
 

@@ -27,7 +27,8 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
-            <Route path="/admin" element={<AdminLayout />}>
+            {/* Panel admin oculto en URL secreta (con ñ, larga, no descubrible) */}
+            <Route path="/koalas-añoñoso-control-7g3x9k2m" element={<AdminLayout />}>
               <Route index element={<AdminDashboard />} />
               <Route path="productos" element={<AdminProducts />} />
               <Route path="pedidos" element={<AdminOrders />} />
