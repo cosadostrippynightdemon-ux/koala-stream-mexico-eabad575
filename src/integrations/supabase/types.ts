@@ -14,6 +14,24 @@ export type Database = {
   }
   public: {
     Tables: {
+      chat_rate_limits: {
+        Row: {
+          created_at: string
+          id: string
+          ip_hash: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ip_hash: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ip_hash?: string
+        }
+        Relationships: []
+      }
       customers: {
         Row: {
           created_at: string
@@ -47,7 +65,7 @@ export type Database = {
       delivered_credentials: {
         Row: {
           account_email: string
-          account_password: string
+          account_password_enc: string | null
           created_at: string
           customer_id: string | null
           delivered_at: string
@@ -61,7 +79,7 @@ export type Database = {
         }
         Insert: {
           account_email: string
-          account_password: string
+          account_password_enc?: string | null
           created_at?: string
           customer_id?: string | null
           delivered_at?: string
@@ -75,7 +93,7 @@ export type Database = {
         }
         Update: {
           account_email?: string
-          account_password?: string
+          account_password_enc?: string | null
           created_at?: string
           customer_id?: string | null
           delivered_at?: string
@@ -270,6 +288,39 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      _cred_key: { Args: never; Returns: string }
+      admin_delete_credential: { Args: { _id: string }; Returns: undefined }
+      admin_get_credentials: {
+        Args: never
+        Returns: {
+          account_email: string
+          account_password: string
+          created_at: string
+          customer_id: string
+          delivered_at: string
+          expires_at: string
+          id: string
+          modality: string
+          notes: string
+          order_id: string
+          product_name: string
+          updated_at: string
+        }[]
+      }
+      admin_save_credential: {
+        Args: {
+          _account_email: string
+          _account_password: string
+          _customer_id: string
+          _expires_at: string
+          _id: string
+          _modality: string
+          _notes: string
+          _order_id: string
+          _product_name: string
+        }
+        Returns: string
+      }
       create_public_order: {
         Args: {
           _customer_email: string
@@ -277,9 +328,24 @@ export type Database = {
           _customer_whatsapp: string
           _items: Json
           _notes: string
-          _total_mxn: number
         }
-        Returns: string
+        Returns: {
+          bank_details: string
+          order_id: string
+          total_mxn: number
+        }[]
+      }
+      get_public_settings: {
+        Args: never
+        Returns: {
+          business_name: string
+          exchange_rate: number
+          multiplier_compartida: number
+          multiplier_individual: number
+          multiplier_perfil: number
+          whatsapp_message_template: string
+          whatsapp_number: string
+        }[]
       }
       has_role: {
         Args: {
