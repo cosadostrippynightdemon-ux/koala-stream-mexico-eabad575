@@ -55,18 +55,23 @@ export function CartDrawer() {
         subtotal: i.subtotal,
       }));
 
-      const { error } = await supabase.rpc("create_public_order", {
+      // Server recomputes total against real catalog and returns bank_details
+      // (which is no longer publicly readable).
+      const { data, error } = await (supabase.rpc as any)("create_public_order", {
         _customer_name: name,
         _customer_whatsapp: whatsapp,
         _customer_email: email || "",
         _items: itemsPayload,
-        _total_mxn: total,
         _notes: notes || "",
       });
 
       if (error) throw error;
 
-      const message = buildOrderMessage(items, total, name, settings.bank_details);
+      const row = Array.isArray(data) ? data[0] : data;
+      const serverTotal = Number(row?.total_mxn ?? total);
+      const bankDetails = (row?.bank_details as string) ?? settings.bank_details ?? "";
+
+      const message = buildOrderMessage(items, serverTotal, name, bankDetails);
       const url = whatsappLink(message, settings.whatsapp_number);
       window.open(url, "_blank");
 

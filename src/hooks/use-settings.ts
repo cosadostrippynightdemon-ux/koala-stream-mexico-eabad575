@@ -27,20 +27,41 @@ export function useSettings() {
   useEffect(() => {
     let mounted = true;
     (async () => {
-      const { data, error } = await supabase.from("settings").select("*").limit(1).maybeSingle();
-      if (mounted && !error && data) {
+      // Try admin-level full read first (works only for admins via RLS).
+      const { data: full } = await supabase.from("settings").select("*").limit(1).maybeSingle();
+      if (mounted && full) {
         setSettings({
-          id: data.id,
-          exchange_rate: Number(data.exchange_rate),
-          multiplier_individual: Number(data.multiplier_individual),
-          multiplier_compartida: Number(data.multiplier_compartida),
-          multiplier_perfil: Number(data.multiplier_perfil),
-          whatsapp_number: data.whatsapp_number,
-          bank_details: data.bank_details,
-          whatsapp_message_template: data.whatsapp_message_template,
-          business_name: data.business_name,
-          business_owner: data.business_owner,
+          id: full.id,
+          exchange_rate: Number(full.exchange_rate),
+          multiplier_individual: Number(full.multiplier_individual),
+          multiplier_compartida: Number(full.multiplier_compartida),
+          multiplier_perfil: Number(full.multiplier_perfil),
+          whatsapp_number: full.whatsapp_number,
+          bank_details: full.bank_details,
+          whatsapp_message_template: full.whatsapp_message_template,
+          business_name: full.business_name,
+          business_owner: full.business_owner,
         });
+        setLoading(false);
+        return;
+      }
+
+      // Public visitors: only safe fields via RPC. bank_details stays empty
+      // and is delivered by create_public_order at checkout time.
+      const { data: pub } = await (supabase.rpc as any)("get_public_settings");
+      const row = Array.isArray(pub) ? pub[0] : pub;
+      if (mounted && row) {
+        setSettings((prev) => ({
+          ...prev,
+          exchange_rate: Number(row.exchange_rate),
+          multiplier_individual: Number(row.multiplier_individual),
+          multiplier_compartida: Number(row.multiplier_compartida),
+          multiplier_perfil: Number(row.multiplier_perfil),
+          whatsapp_number: row.whatsapp_number,
+          whatsapp_message_template: row.whatsapp_message_template,
+          business_name: row.business_name,
+          bank_details: "",
+        }));
       }
       if (mounted) setLoading(false);
     })();
