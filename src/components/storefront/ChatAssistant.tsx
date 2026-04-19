@@ -37,29 +37,17 @@ export function ChatAssistant() {
     setLoading(true);
 
     let assistantSoFar = "";
+    let assistantStarted = false;
     const upsert = (chunk: string) => {
       assistantSoFar += chunk;
       setMessages((prev) => {
-        const last = prev[prev.length - 1];
-        if (last?.role === "assistant" && last !== WELCOME && prev.length > 1 && prev[prev.length - 1] !== WELCOME) {
-          // Solo reemplaza si el último ya es una respuesta en curso (no la bienvenida)
-          if (last.content && !last.content.endsWith("\n[koala-typing]")) {
-            // continuar reemplazando
-          }
+        if (!assistantStarted) {
+          assistantStarted = true;
+          return [...prev, { role: "assistant", content: assistantSoFar }];
         }
-        // Estrategia simple: si el último es asistente y es esta respuesta en curso, reemplaza; si no, append.
-        if (last?.role === "assistant" && (prev.length > 1 || assistantSoFar.length > chunk.length)) {
-          // Solo reemplaza si esta es la respuesta en curso
-        }
-        return [...prev.slice(0, -1), last, ...[]];
-      });
-      // Implementación simple correcta:
-      setMessages((prev) => {
-        const last = prev[prev.length - 1];
-        if (last?.role === "assistant" && assistantSoFar !== chunk) {
-          return prev.map((m, i) => (i === prev.length - 1 ? { ...m, content: assistantSoFar } : m));
-        }
-        return [...prev, { role: "assistant", content: assistantSoFar }];
+        return prev.map((m, i) =>
+          i === prev.length - 1 ? { ...m, content: assistantSoFar } : m
+        );
       });
     };
 

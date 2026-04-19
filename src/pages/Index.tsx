@@ -7,6 +7,7 @@ import { SportsSection } from "@/components/storefront/SportsSection";
 import { FAQ } from "@/components/storefront/FAQ";
 import { Footer } from "@/components/storefront/Footer";
 import { CartDrawer } from "@/components/storefront/CartDrawer";
+import { ChatAssistant } from "@/components/storefront/ChatAssistant";
 
 const Index = () => {
   return (
@@ -22,6 +23,7 @@ const Index = () => {
       </main>
       <Footer />
       <CartDrawer />
+      <ChatAssistant />
     </div>
   );
 };
