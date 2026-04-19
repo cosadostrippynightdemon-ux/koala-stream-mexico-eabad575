@@ -7,6 +7,7 @@ import { useCart, type Product } from "@/store/cart";
 import { calculatePriceMXN, formatMXN, modalityLabel, durationLabel, type Modality, INDIVIDUAL_FIXED_MXN } from "@/lib/pricing";
 import { useSettings } from "@/hooks/use-settings";
 import { BrandIcon } from "@/components/brand/BrandIcon";
+import { Watermark } from "@/components/brand/Watermark";
 import { sfx } from "@/lib/sounds";
 
 const categoryColors: Record<string, string> = {
@@ -43,8 +44,12 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <Card className="card-premium group flex h-full flex-col overflow-hidden border-border/60 bg-gradient-card shadow-soft">
-      <div className="relative h-36 overflow-hidden">
+      <div className="relative h-56 overflow-hidden">
         <BrandIcon slug={product.image_url} category={product.category} />
+        {/* Marca de agua giratoria Koalas Software */}
+        <div className="absolute bottom-2 right-2 z-20">
+          <Watermark size={56} opacity={0.7} />
+        </div>
         {product.featured && (
           <Badge className="absolute right-3 top-3 z-20 gap-1 border-0 bg-gold text-gold-foreground shadow-soft animate-badge-pulse">
             <Star className="h-3 w-3 fill-current" /> Top

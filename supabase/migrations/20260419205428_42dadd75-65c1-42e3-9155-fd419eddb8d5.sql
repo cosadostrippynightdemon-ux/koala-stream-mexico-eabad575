@@ -1,0 +1,1 @@
+UPDATE public.settings SET multiplier_compartida = 1.1883;
