@@ -79,14 +79,16 @@ export default function Orders() {
     const expiresAt = new Date();
     expiresAt.setMonth(expiresAt.getMonth() + (Number(item.duration) || 1));
 
-    const { error } = await supabase.from("delivered_credentials").insert({
-      order_id: credOrder.id,
-      customer_id: credOrder.customer_id,
-      product_name: item.product_name,
-      modality: item.modality,
-      account_email: credEmail.trim(),
-      account_password: credPassword.trim(),
-      expires_at: expiresAt.toISOString(),
+    const { error } = await (supabase.rpc as any)("admin_save_credential", {
+      _id: null,
+      _order_id: credOrder.id,
+      _customer_id: credOrder.customer_id,
+      _product_name: item.product_name,
+      _modality: item.modality,
+      _account_email: credEmail.trim(),
+      _account_password: credPassword.trim(),
+      _expires_at: expiresAt.toISOString(),
+      _notes: null,
     });
 
     if (error) return toast.error(error.message);

@@ -1,6 +1,9 @@
 // Edge function: chat IA para clientes de Koalas Software
 // Usa Lovable AI Gateway (LOVABLE_API_KEY auto-provisto).
 // NO expone datos del dueño ni rutas admin.
+// Incluye rate limiting por IP (DB-backed).
+
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -28,12 +31,60 @@ QUÉ SÍ PUEDES HACER:
 
 ESTILO: cálido, mexicano, breve, con emojis 🐨💚. Máximo 4 oraciones por respuesta salvo que pidan detalle.`;
 
+// Hash IP for privacy (no plain IPs in DB)
+async function hashIp(ip: string): Promise<string> {
+  const buf = new TextEncoder().encode(ip + "|koala-rl-salt-2026");
+  const digest = await crypto.subtle.digest("SHA-256", buf);
+  return Array.from(new Uint8Array(digest))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+const RATE_LIMIT_WINDOW_SEC = 60;
+const RATE_LIMIT_MAX = 12;
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
+    // ---- Rate limiting ----
+    const xff = req.headers.get("x-forwarded-for") ?? "";
+    const ip = (xff.split(",")[0] || req.headers.get("cf-connecting-ip") || "unknown").trim();
+    const ipHash = await hashIp(ip);
+
+    const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
+    const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    if (SUPABASE_URL && SERVICE_KEY) {
+      try {
+        const admin = createClient(SUPABASE_URL, SERVICE_KEY);
+        const since = new Date(Date.now() - RATE_LIMIT_WINDOW_SEC * 1000).toISOString();
+        const { count } = await admin
+          .from("chat_rate_limits")
+          .select("id", { count: "exact", head: true })
+          .eq("ip_hash", ipHash)
+          .gte("created_at", since);
+
+        if ((count ?? 0) >= RATE_LIMIT_MAX) {
+          return new Response(
+            JSON.stringify({ error: "Demasiadas preguntas, intenta en un minuto." }),
+            { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          );
+        }
+
+        // Record this request (fire-and-forget)
+        admin.from("chat_rate_limits").insert({ ip_hash: ipHash }).then(() => {});
+        // Cleanup old entries occasionally (1% chance)
+        if (Math.random() < 0.01) {
+          const old = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+          admin.from("chat_rate_limits").delete().lt("created_at", old).then(() => {});
+        }
+      } catch (e) {
+        console.error("rate-limit check failed (allowing request):", e);
+      }
+    }
+
     const { messages } = await req.json();
     if (!Array.isArray(messages) || messages.length === 0 || messages.length > 30) {
       return new Response(JSON.stringify({ error: "Mensajes inválidos" }), {
