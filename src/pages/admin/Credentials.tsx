@@ -33,12 +33,12 @@ export default function Credentials() {
   async function load() {
     setLoading(true);
     const [{ data: c }, { data: customers }] = await Promise.all([
-      supabase.from("delivered_credentials").select("*").order("expires_at", { ascending: true }),
+      (supabase.rpc as any)("admin_get_credentials"),
       supabase.from("customers").select("id, name, whatsapp"),
     ]);
     const cmap = new Map((customers ?? []).map((x: any) => [x.id, x]));
     setCreds(
-      (c ?? []).map((row: any) => ({
+      ((c as any[]) ?? []).map((row: any) => ({
         ...row,
         customer_name: row.customer_id ? cmap.get(row.customer_id)?.name : undefined,
         customer_whatsapp: row.customer_id ? cmap.get(row.customer_id)?.whatsapp : undefined,
@@ -53,7 +53,7 @@ export default function Credentials() {
 
   async function remove(id: string) {
     if (!confirm("¿Eliminar este registro de credencial?")) return;
-    await supabase.from("delivered_credentials").delete().eq("id", id);
+    await (supabase.rpc as any)("admin_delete_credential", { _id: id });
     toast.success("Eliminado");
     load();
   }
