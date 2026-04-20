@@ -219,31 +219,37 @@ export default function Menu() {
                   >
                     {category}
                   </h2>
-                  <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                    {items.map((p) => (
-                      <div key={p.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "12px" }}>
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                          <div style={{ fontSize: "15px", fontWeight: 700, color: "hsl(195 25% 22%)" }}>{p.name}</div>
-                          <div style={{ fontSize: "11px", color: "hsl(195 15% 50%)" }}>
-                            Individual · Compartida · Perfil
+                  <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                    {items.map((p) => {
+                      const individual = INDIVIDUAL_FIXED_MXN;
+                      const compartida = priceFor(p.base_price_usd, "compartida");
+                      return (
+                        <div key={p.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "12px", borderBottom: "1px dashed hsl(36 25% 88%)", paddingBottom: "10px" }}>
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ fontSize: "15px", fontWeight: 700, color: "hsl(195 25% 22%)" }}>{p.name}</div>
+                            <div style={{ fontSize: "10px", color: "hsl(195 15% 50%)", marginTop: "2px" }}>
+                              Pago mensual
+                            </div>
+                          </div>
+                          <div style={{ display: "flex", gap: "10px" }}>
+                            <div style={{ textAlign: "center", background: "hsl(165 35% 92%)", padding: "6px 10px", borderRadius: "8px", minWidth: "78px" }}>
+                              <div style={{ fontSize: "9px", fontWeight: 700, color: "hsl(165 45% 30%)", textTransform: "uppercase", letterSpacing: "0.05em" }}>Individual</div>
+                              <div style={{ fontSize: "16px", fontWeight: 800, color: "hsl(165 45% 30%)", lineHeight: 1.1 }}>
+                                {formatMXN(individual)}
+                              </div>
+                              <div style={{ fontSize: "8px", color: "hsl(195 15% 50%)" }}>/mes</div>
+                            </div>
+                            <div style={{ textAlign: "center", background: "hsl(22 65% 90%)", padding: "6px 10px", borderRadius: "8px", minWidth: "78px" }}>
+                              <div style={{ fontSize: "9px", fontWeight: 700, color: "hsl(22 75% 35%)", textTransform: "uppercase", letterSpacing: "0.05em" }}>Compartida</div>
+                              <div style={{ fontSize: "16px", fontWeight: 800, color: "hsl(22 75% 40%)", lineHeight: 1.1 }}>
+                                {formatMXN(compartida)}
+                              </div>
+                              <div style={{ fontSize: "8px", color: "hsl(195 15% 50%)" }}>4 disp.</div>
+                            </div>
                           </div>
                         </div>
-                        <div style={{ textAlign: "right", whiteSpace: "nowrap" }}>
-                          <div style={{ fontSize: "11px", color: "hsl(195 15% 50%)", lineHeight: 1.2 }}>desde</div>
-                          <div style={{ fontSize: "20px", fontWeight: 800, color: "hsl(22 75% 50%)", lineHeight: 1.1 }}>
-                            {formatMXN(Math.max(
-                              INDIVIDUAL_FIXED_MXN,
-                              Math.min(
-                                priceFor(p.base_price_usd, "perfil"),
-                                priceFor(p.base_price_usd, "compartida"),
-                                priceFor(p.base_price_usd, "individual")
-                              )
-                            ))}
-                          </div>
-                          <div style={{ fontSize: "10px", color: "hsl(195 15% 50%)" }}>/mes</div>
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               ))}
