@@ -29,7 +29,7 @@ export function Shop() {
   }, [products, query, category]);
 
   return (
-    <section id="tienda" className="bg-muted/30 py-20">
+    <section id="tienda" className="pt-6 pb-12">
       <div className="container">
         <div className="mx-auto mb-10 max-w-2xl text-center">
           <p className="text-sm font-semibold uppercase tracking-wider text-primary">Catálogo completo</p>

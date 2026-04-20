@@ -15,8 +15,8 @@ import { z } from "zod";
 import { sfx } from "@/lib/sounds";
 
 const formSchema = z.object({
-  name: z.string().trim().min(2, "Mínimo 2 caracteres").max(100),
-  whatsapp: z.string().trim().min(8, "WhatsApp inválido").max(20),
+  name: z.string().trim().max(100).optional().or(z.literal("")),
+  whatsapp: z.string().trim().max(20).optional().or(z.literal("")),
   notes: z.string().trim().max(500).optional().or(z.literal("")),
 });
 
@@ -44,6 +44,8 @@ export function CartDrawer() {
 
     setSubmitting(true);
     try {
+      const customerName = (name || "").trim() || "Cliente";
+      const customerWhatsapp = (whatsapp || "").trim() || "sin-whatsapp";
       const itemsPayload = items.map((i) => ({
         product_id: i.product.id,
         product_name: i.product.name,
@@ -57,8 +59,8 @@ export function CartDrawer() {
       // Server recomputes total against real catalog and returns bank_details
       // (which is no longer publicly readable).
       const { data, error } = await (supabase.rpc as any)("create_public_order", {
-        _customer_name: name,
-        _customer_whatsapp: whatsapp,
+        _customer_name: customerName,
+        _customer_whatsapp: customerWhatsapp,
         _customer_email: "",
         _items: itemsPayload,
         _notes: notes || "",
@@ -70,12 +72,12 @@ export function CartDrawer() {
       const serverTotal = Number(row?.total_mxn ?? total);
       const bankDetails = (row?.bank_details as string) ?? settings.bank_details ?? "";
 
-      const message = buildOrderMessage(items, serverTotal, name, bankDetails);
+      const message = buildOrderMessage(items, serverTotal, customerName, bankDetails);
       const url = whatsappLink(message, settings.whatsapp_number);
       window.open(url, "_blank");
 
       sfx.success();
-      toast.success("¡Pedido registrado! Te redirigimos a WhatsApp 🐨");
+      toast.success("¡Pedido enviado por WhatsApp! 🐨");
       clear();
       setName("");
       setWhatsapp("");
@@ -143,11 +145,11 @@ export function CartDrawer() {
           <div className="space-y-3 border-t border-border/60 bg-muted/30 p-4">
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
               <div>
-                <Label htmlFor="cart-name" className="text-xs">Nombre *</Label>
+                <Label htmlFor="cart-name" className="text-xs">Nombre (opcional)</Label>
                 <Input id="cart-name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Tu nombre" />
               </div>
               <div>
-                <Label htmlFor="cart-wa" className="text-xs">WhatsApp *</Label>
+                <Label htmlFor="cart-wa" className="text-xs">WhatsApp (opcional)</Label>
                 <Input id="cart-wa" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} placeholder="+52 ..." />
               </div>
             </div>

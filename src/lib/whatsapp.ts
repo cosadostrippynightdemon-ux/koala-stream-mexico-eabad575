@@ -15,8 +15,12 @@ export function buildOrderMessage(
   bankDetails: string
 ): string {
   const totalProducts = items.reduce((acc, i) => acc + i.quantity, 0);
+  const greeting =
+    customerName && customerName !== "Cliente"
+      ? `Hola Koalas Software 🐨, soy ${customerName}.`
+      : `Hola Koalas Software 🐨,`;
   const lines: string[] = [
-    `Hola Koalas Software 🐨, soy ${customerName}.`,
+    greeting,
     `Quiero comprar:`,
     ``,
   ];
