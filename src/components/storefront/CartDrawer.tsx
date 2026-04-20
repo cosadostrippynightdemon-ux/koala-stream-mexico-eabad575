@@ -21,7 +21,8 @@ const formSchema = z.object({
 });
 
 export function CartDrawer() {
-  const { items, total, totalItems, isOpen, setOpen, remove, setQuantity, clear } = useCart();
+  const { items, total, isOpen, setOpen, remove, setQuantity, clear } = useCart();
+  const totalItems = items.reduce((acc, i) => acc + i.quantity, 0);
   const { settings } = useSettings();
   const [name, setName] = useState("");
   const [whatsapp, setWhatsapp] = useState("");
