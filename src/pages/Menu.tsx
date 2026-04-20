@@ -223,6 +223,9 @@ export default function Menu() {
                     {items.map((p) => {
                       const individual = INDIVIDUAL_FIXED_MXN;
                       const compartida = priceFor(p.base_price_usd, "compartida");
+                      // Productos confirmados de 4 dispositivos
+                      const FOUR_DEVICES = ["Netflix Premium", "Disney+ Premium", "Max (HBO)", "Prime Video", "Paramount+", "Apple TV+", "Vix Premium"];
+                      const sharedLabel = FOUR_DEVICES.includes(p.name) ? "4 disp." : "Compartida";
                       return (
                         <div key={p.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "12px", borderBottom: "1px dashed hsl(36 25% 88%)", paddingBottom: "10px" }}>
                           <div style={{ flex: 1, minWidth: 0 }}>
@@ -244,7 +247,7 @@ export default function Menu() {
                               <div style={{ fontSize: "16px", fontWeight: 800, color: "hsl(22 75% 40%)", lineHeight: 1.1 }}>
                                 {formatMXN(compartida)}
                               </div>
-                              <div style={{ fontSize: "8px", color: "hsl(195 15% 50%)" }}>4 disp.</div>
+                              <div style={{ fontSize: "8px", color: "hsl(195 15% 50%)" }}>{sharedLabel}</div>
                             </div>
                           </div>
                         </div>
