@@ -4,7 +4,7 @@ import path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: '/koala-stream-mexico-eabad575/',
+  base: '/',
   server: {
     host: "::",
     port: 8080,
