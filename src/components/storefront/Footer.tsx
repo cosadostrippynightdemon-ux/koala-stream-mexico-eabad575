@@ -1,6 +1,7 @@
 import { Logo } from "@/components/brand/Logo";
 import { Watermark } from "@/components/brand/Watermark";
-import { MessageCircle, Heart } from "lucide-react";
+import { MessageCircle, Heart, FileImage } from "lucide-react";
+import { Link } from "react-router-dom";
 
 import { whatsappLink, WHATSAPP_DISPLAY } from "@/lib/whatsapp";
 
@@ -53,6 +54,11 @@ export function Footer() {
             <li><a href="#como-funciona" className="transition-smooth hover:text-primary">Cómo funciona</a></li>
             <li><a href="#deportes" className="transition-smooth hover:text-primary">Deportes</a></li>
             <li><a href="#faq" className="transition-smooth hover:text-primary">Preguntas frecuentes</a></li>
+            <li>
+              <Link to="/menu" className="inline-flex items-center gap-1.5 font-semibold text-primary transition-smooth hover:text-primary/80">
+                <FileImage className="h-3.5 w-3.5" /> Menú de precios (PNG/PDF)
+              </Link>
+            </li>
           </ul>
         </div>
 

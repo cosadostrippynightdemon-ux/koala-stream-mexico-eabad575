@@ -9,6 +9,7 @@ import { sfx } from "@/lib/sounds";
 
 const links = [
   { href: "#tienda", label: "Tienda" },
+  { href: "/menu", label: "Menú PDF", isRoute: true },
   { href: "#como-funciona", label: "Cómo funciona" },
   { href: "#deportes", label: "Deportes" },
   { href: "#faq", label: "Preguntas" },
@@ -36,16 +37,27 @@ export function Navbar() {
         </Link>
 
         <nav className="hidden items-center gap-7 md:flex">
-          {links.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
-              onMouseEnter={() => sfx.tick()}
-              className="text-sm font-medium text-foreground/80 transition-smooth hover:text-primary story-link"
-            >
-              {l.label}
-            </a>
-          ))}
+          {links.map((l) =>
+            l.isRoute ? (
+              <Link
+                key={l.href}
+                to={l.href}
+                onMouseEnter={() => sfx.tick()}
+                className="rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary transition-smooth hover:bg-primary/20"
+              >
+                {l.label}
+              </Link>
+            ) : (
+              <a
+                key={l.href}
+                href={l.href}
+                onMouseEnter={() => sfx.tick()}
+                className="text-sm font-medium text-foreground/80 transition-smooth hover:text-primary story-link"
+              >
+                {l.label}
+              </a>
+            )
+          )}
         </nav>
 
         <div className="flex items-center gap-2">
@@ -95,16 +107,27 @@ export function Navbar() {
       {mobileOpen && (
         <div className="border-t border-border/60 bg-background md:hidden animate-fade-up">
           <nav className="container flex flex-col gap-1 py-4">
-            {links.map((l) => (
-              <a
-                key={l.href}
-                href={l.href}
-                onClick={() => setMobileOpen(false)}
-                className="rounded-md px-3 py-2 text-sm font-medium text-foreground/80 transition-smooth hover:bg-muted hover:text-primary"
-              >
-                {l.label}
-              </a>
-            ))}
+            {links.map((l) =>
+              l.isRoute ? (
+                <Link
+                  key={l.href}
+                  to={l.href}
+                  onClick={() => setMobileOpen(false)}
+                  className="rounded-md bg-primary/10 px-3 py-2 text-sm font-semibold text-primary transition-smooth hover:bg-primary/20"
+                >
+                  {l.label}
+                </Link>
+              ) : (
+                <a
+                  key={l.href}
+                  href={l.href}
+                  onClick={() => setMobileOpen(false)}
+                  className="rounded-md px-3 py-2 text-sm font-medium text-foreground/80 transition-smooth hover:bg-muted hover:text-primary"
+                >
+                  {l.label}
+                </a>
+              )
+            )}
           </nav>
         </div>
       )}
