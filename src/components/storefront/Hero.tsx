@@ -16,7 +16,7 @@ export function Hero() {
             Hecho con cariño en México 🇲🇽
           </div>
 
-          <h1 className="font-display text-4xl font-bold leading-tight text-foreground md:text-6xl">
+          <h1 className="font-display text-3xl font-bold leading-tight text-foreground md:text-5xl">
             Cuentas <span className="text-gradient-primary">Premium</span> de
             streaming, fáciles y en pesos.
           </h1>
