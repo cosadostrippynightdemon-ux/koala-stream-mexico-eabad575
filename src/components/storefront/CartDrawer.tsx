@@ -15,8 +15,8 @@ import { z } from "zod";
 import { sfx } from "@/lib/sounds";
 
 const formSchema = z.object({
-  name: z.string().trim().min(2, "Mínimo 2 caracteres").max(100),
-  whatsapp: z.string().trim().min(8, "WhatsApp inválido").max(20),
+  name: z.string().trim().max(100).optional().or(z.literal("")),
+  whatsapp: z.string().trim().max(20).optional().or(z.literal("")),
   notes: z.string().trim().max(500).optional().or(z.literal("")),
 });
 
