@@ -44,6 +44,8 @@ export function CartDrawer() {
 
     setSubmitting(true);
     try {
+      const customerName = (name || "").trim() || "Cliente";
+      const customerWhatsapp = (whatsapp || "").trim() || "sin-whatsapp";
       const itemsPayload = items.map((i) => ({
         product_id: i.product.id,
         product_name: i.product.name,
@@ -57,8 +59,8 @@ export function CartDrawer() {
       // Server recomputes total against real catalog and returns bank_details
       // (which is no longer publicly readable).
       const { data, error } = await (supabase.rpc as any)("create_public_order", {
-        _customer_name: name,
-        _customer_whatsapp: whatsapp,
+        _customer_name: customerName,
+        _customer_whatsapp: customerWhatsapp,
         _customer_email: "",
         _items: itemsPayload,
         _notes: notes || "",
@@ -70,12 +72,12 @@ export function CartDrawer() {
       const serverTotal = Number(row?.total_mxn ?? total);
       const bankDetails = (row?.bank_details as string) ?? settings.bank_details ?? "";
 
-      const message = buildOrderMessage(items, serverTotal, name, bankDetails);
+      const message = buildOrderMessage(items, serverTotal, customerName, bankDetails);
       const url = whatsappLink(message, settings.whatsapp_number);
       window.open(url, "_blank");
 
       sfx.success();
-      toast.success("¡Pedido registrado! Te redirigimos a WhatsApp 🐨");
+      toast.success("¡Pedido enviado por WhatsApp! 🐨");
       clear();
       setName("");
       setWhatsapp("");
