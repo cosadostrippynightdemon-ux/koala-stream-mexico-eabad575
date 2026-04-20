@@ -231,10 +231,13 @@ export default function Menu() {
                         <div style={{ textAlign: "right", whiteSpace: "nowrap" }}>
                           <div style={{ fontSize: "11px", color: "hsl(195 15% 50%)", lineHeight: 1.2 }}>desde</div>
                           <div style={{ fontSize: "20px", fontWeight: 800, color: "hsl(22 75% 50%)", lineHeight: 1.1 }}>
-                            {formatMXN(Math.min(
-                              priceFor(p.base_price_usd, "perfil"),
-                              priceFor(p.base_price_usd, "compartida"),
-                              INDIVIDUAL_FIXED_MXN
+                            {formatMXN(Math.max(
+                              INDIVIDUAL_FIXED_MXN,
+                              Math.min(
+                                priceFor(p.base_price_usd, "perfil"),
+                                priceFor(p.base_price_usd, "compartida"),
+                                priceFor(p.base_price_usd, "individual")
+                              )
                             ))}
                           </div>
                           <div style={{ fontSize: "10px", color: "hsl(195 15% 50%)" }}>/mes</div>
