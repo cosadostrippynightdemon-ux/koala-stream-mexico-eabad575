@@ -9,8 +9,8 @@ export function Hero() {
       <div className="pointer-events-none absolute -left-20 -top-20 h-72 w-72 rounded-full bg-primary/20 blur-3xl" />
       <div className="pointer-events-none absolute -right-20 bottom-0 h-72 w-72 rounded-full bg-accent/30 blur-3xl" />
 
-      <div className="container relative grid gap-12 py-20 md:grid-cols-2 md:py-28">
-        <div className="flex flex-col justify-center gap-6 animate-fade-up">
+      <div className="container relative grid gap-10 py-12 md:grid-cols-2 md:py-16">
+        <div className="flex flex-col justify-center gap-5 animate-fade-up">
           <div className="inline-flex w-fit items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-xs font-semibold text-primary">
             <Sparkles className="h-3.5 w-3.5" />
             Hecho con cariño en México 🇲🇽
