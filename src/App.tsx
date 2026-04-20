@@ -10,6 +10,7 @@ import NotFound from "./pages/NotFound.tsx";
 
 // Lazy: páginas no críticas para el visitante de la tienda
 const Auth = lazy(() => import("./pages/Auth.tsx"));
+const Menu = lazy(() => import("./pages/Menu.tsx"));
 const AdminLayout = lazy(() => import("./pages/admin/AdminLayout.tsx"));
 const AdminDashboard = lazy(() => import("./pages/admin/Dashboard.tsx"));
 const AdminProducts = lazy(() => import("./pages/admin/Products.tsx"));
@@ -44,6 +45,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<Auth />} />
+              <Route path="/menu" element={<Menu />} />
               {/* Panel admin oculto en URL secreta (con ñ, larga, no descubrible) */}
               <Route path="/koalas-añoñoso-control-7g3x9k2m" element={<AdminLayout />}>
                 <Route index element={<AdminDashboard />} />
