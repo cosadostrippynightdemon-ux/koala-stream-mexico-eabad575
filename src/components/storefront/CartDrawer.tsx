@@ -17,21 +17,19 @@ import { sfx } from "@/lib/sounds";
 const formSchema = z.object({
   name: z.string().trim().min(2, "Mínimo 2 caracteres").max(100),
   whatsapp: z.string().trim().min(8, "WhatsApp inválido").max(20),
-  email: z.string().trim().email("Email inválido").max(150).optional().or(z.literal("")),
   notes: z.string().trim().max(500).optional().or(z.literal("")),
 });
 
 export function CartDrawer() {
-  const { items, total, isOpen, setOpen, remove, setQuantity, clear } = useCart();
+  const { items, total, totalItems, isOpen, setOpen, remove, setQuantity, clear } = useCart();
   const { settings } = useSettings();
   const [name, setName] = useState("");
   const [whatsapp, setWhatsapp] = useState("");
-  const [email, setEmail] = useState("");
   const [notes, setNotes] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   async function handleCheckout() {
-    const parsed = formSchema.safeParse({ name, whatsapp, email, notes });
+    const parsed = formSchema.safeParse({ name, whatsapp, notes });
     if (!parsed.success) {
       sfx.error();
       toast.error(parsed.error.issues[0].message);
@@ -60,7 +58,7 @@ export function CartDrawer() {
       const { data, error } = await (supabase.rpc as any)("create_public_order", {
         _customer_name: name,
         _customer_whatsapp: whatsapp,
-        _customer_email: email || "",
+        _customer_email: "",
         _items: itemsPayload,
         _notes: notes || "",
       });
@@ -80,7 +78,6 @@ export function CartDrawer() {
       clear();
       setName("");
       setWhatsapp("");
-      setEmail("");
       setNotes("");
       setOpen(false);
     } catch (e) {
@@ -154,17 +151,19 @@ export function CartDrawer() {
               </div>
             </div>
             <div>
-              <Label htmlFor="cart-email" className="text-xs">Email (opcional)</Label>
-              <Input id="cart-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="tu@email.com" />
-            </div>
-            <div>
               <Label htmlFor="cart-notes" className="text-xs">Notas (opcional)</Label>
               <Textarea id="cart-notes" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Alguna preferencia..." className="h-16" />
             </div>
 
-            <div className="flex items-center justify-between border-t border-border/60 pt-3">
-              <span className="text-sm font-semibold">Total</span>
-              <span className="font-display text-2xl font-bold text-primary">{formatMXN(total)}</span>
+            <div className="space-y-1 border-t border-border/60 pt-3">
+              <div className="flex items-center justify-between text-xs text-muted-foreground">
+                <span>Productos</span>
+                <span className="font-semibold text-foreground">{totalItems}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-semibold">Total</span>
+                <span className="font-display text-2xl font-bold text-primary">{formatMXN(total)}</span>
+              </div>
             </div>
 
             <Button
