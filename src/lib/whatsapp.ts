@@ -14,6 +14,7 @@ export function buildOrderMessage(
   customerName: string,
   bankDetails: string
 ): string {
+  const totalProducts = items.reduce((acc, i) => acc + i.quantity, 0);
   const lines: string[] = [
     `Hola Koalas Software 🐨, soy ${customerName}.`,
     `Quiero comprar:`,
@@ -25,6 +26,7 @@ export function buildOrderMessage(
     );
   }
   lines.push(``);
+  lines.push(`📦 *Productos: ${totalProducts}*`);
   lines.push(`💰 *TOTAL: ${formatMXN(total)} MXN*`);
   lines.push(``);
   lines.push(`📥 Pago por transferencia bancaria:`);
