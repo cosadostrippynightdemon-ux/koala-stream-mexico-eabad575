@@ -1,4 +1,4 @@
-import logo from "@/assets/koalas-logo.png";
+import logo from "@/assets/koalas-logo.webp";
 import { cn } from "@/lib/utils";
 
 interface LogoProps {
@@ -20,6 +20,10 @@ export function Logo({ className, showText = true, size = "md" }: LogoProps) {
       <img
         src={logo}
         alt="Logo de Koalas Software"
+        width={96}
+        height={96}
+        decoding="async"
+        loading="eager"
         className={cn(sizes[size], "rounded-full object-cover shadow-soft ring-2 ring-primary/20")}
       />
       {showText && (
