@@ -145,11 +145,11 @@ export function CartDrawer() {
           <div className="space-y-3 border-t border-border/60 bg-muted/30 p-4">
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
               <div>
-                <Label htmlFor="cart-name" className="text-xs">Nombre *</Label>
+                <Label htmlFor="cart-name" className="text-xs">Nombre (opcional)</Label>
                 <Input id="cart-name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Tu nombre" />
               </div>
               <div>
-                <Label htmlFor="cart-wa" className="text-xs">WhatsApp *</Label>
+                <Label htmlFor="cart-wa" className="text-xs">WhatsApp (opcional)</Label>
                 <Input id="cart-wa" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} placeholder="+52 ..." />
               </div>
             </div>
